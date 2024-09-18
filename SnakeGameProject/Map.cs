@@ -6,61 +6,74 @@ using System.Threading.Tasks;
 
 namespace SnakeGameProject
 {
-    public class Map
+    internal abstract class Map
     {
-        private int _height;
-        private int _width;
-        private string[,] _map;
-        private List<List<int>>? walls {  get; set; }
+        protected int _width;
+        protected int _height;
+        protected int[,] map;
 
-        public Map (int height, int width) {
+        public Map( int width, int height) {
             _height = height;
             _width = width;
-            _map = new string[height, width];
+            map = new int[_width, _height];
         }
 
-        public void BuildWalls()
-        {
-            // Vertical
-            for (int i = 0; i < _width; i++)
-            {
-                _map[0, i] = "*";
-                _map[_height - 1, i] = "*";
-            }
+        public abstract void CreateMap();
 
-            // Horizontal
-            for (int j = 0; j < _height; j++) {
-                _map[j, 0] = "*";
-                _map[j, _width - 1] = "*";    
-            }
-        }
-        
-        public string[,] GetMap()
-        {
-            return _map;
-        }
-    }
+        //public virtual void CreateMap()
+        //{
 
-    public class MapPrinter
-    {
-        public MapPrinter() { }
-        public void PrintMap(Map map) {
-            string[,] mapData = map.GetMap();
-            for (int i = 0; i < mapData.GetLength(0); i++)
-            {
-                for (int j = 0; j < mapData.GetLength(1); j++) {
-                    if (mapData[i,j] != null)
-                    {
-                        Console.Write(mapData[i, j] + "  ");
-                    }
-                    else
-                    {
-                        Console.Write(mapData[i, j] + " ");
-                    }
-                }
-                Console.WriteLine();
-            }
-        }
+        //    for (int i = 0; i < _width; i++)
+        //    {
+        //        for (int j = 0; j < _height; j++)
+        //        {
+        //            if (i == 0 || i == _width - 1 || j == 0 || j == _height - 1)
+        //            {
+        //                map[i, j] = 1;
+        //            }
+        //            else
+        //            {
+        //                map[i, j] = 0;
+        //            }
+        //        }
+        //    }
+        //}
+        //public void CreateBasicMap()
+        //{
+        //    for (int i = 0; i < _width; i++)
+        //    {
+        //        for (int j = 0; j < _height; j++)
+        //        {
+        //            if (i == 0 || i == _width - 1 || j == 0 || j == _height - 1)
+        //            {
+        //                map[i, j] = 1;
+        //            }
+        //            else
+        //            {
+        //                map[i, j] = 0;
+        //            }
+        //        }
+        //    }
+        //}
 
+        // TO-DO : impe,emtar render visual class
+        //public void PrintMap()
+        //{
+        //    for (int i = 0; i < _width; i++)
+        //    {
+        //        for (int j = 0; j < _height; j++)
+        //        {
+        //            if (map[i, j] == 1)
+        //            {
+        //                Console.Write("#");
+        //            }
+        //            else
+        //            {
+        //                Console.Write(" ");
+        //            }
+        //        }
+        //        Console.WriteLine();
+        //    }
+        //}
     }
 }
