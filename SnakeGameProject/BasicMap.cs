@@ -25,7 +25,7 @@ namespace SnakeGameProject
                         map[i, j] = 0;
                     }
                 }
-                }
+            }
         }
     }
 }
