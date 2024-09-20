@@ -4,7 +4,14 @@ class Program
 {
     public static void Main(string[] args)
     {
-        SnakeGame snakeGame = new SnakeGame();
-        snakeGame.StartGame();
+        RenderMenu();
+    }
+
+    public static void RenderMenu()
+    {
+        string[] mainMenuOptions = { "Start Game", "Credits", "Exit" };
+        IMenuStrategy menuStrategy = new IMainMenuStrategy();
+        Menu menu = new Menu(mainMenuOptions, menuStrategy);
+        menu.ShowMenu();
     }
 }
