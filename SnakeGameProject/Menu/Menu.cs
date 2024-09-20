@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace SnakeGameProject
 {
+    public enum BackgroundColor {
+        Black,
+        White
+    }
+
     public class Menu 
     {
         private string[] _options;
@@ -30,14 +35,12 @@ namespace SnakeGameProject
                     if (i == selectedIndex)
                     {
                         prefix = ">";
-                        Console.ForegroundColor = ConsoleColor.Black;
-                        Console.BackgroundColor = ConsoleColor.White;
+                        ResetColor(BackgroundColor.White);
                     }
                     else
                     {
                         prefix = " ";
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.BackgroundColor = ConsoleColor.Black;
+                        ResetColor(BackgroundColor.Black);
                     }
 
                     Console.WriteLine($"{prefix} {_options[i]}");
@@ -47,7 +50,7 @@ namespace SnakeGameProject
             }
         }
 
-        public void SelectOption()
+        private void SelectOption()
         {
             ConsoleKeyInfo selectedKey;
             do
@@ -68,16 +71,24 @@ namespace SnakeGameProject
             }
             else if (selectedKey.Key == ConsoleKey.Enter)
             {
-                ResetColor();
+                ResetColor(BackgroundColor.Black);
                 _strategy.ExecuteOptions(selectedIndex + 1);
             }
-            ResetColor();
+            ResetColor(BackgroundColor.Black);
             Console.Clear();
         }
-        public void ResetColor()
+        private void ResetColor(BackgroundColor color)
         {
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.BackgroundColor = ConsoleColor.Black;
+            if (color == BackgroundColor.Black)
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.BackgroundColor = ConsoleColor.Black;
+            }
+            else if (color == BackgroundColor.White)
+            {
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.BackgroundColor = ConsoleColor.White;
+            }
         }
     }
 }
