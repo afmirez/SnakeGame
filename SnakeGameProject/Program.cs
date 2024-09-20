@@ -9,8 +9,8 @@ class Program
 
     public static void RenderMenu()
     {
-        string[] mainMenuOptions = new string[] { "Start Game", "Scoreboard", "Exit" };
-        IMenuStrategy menuStrategy = new IMainMenuStartegy();
+        string[] mainMenuOptions = { "Start Game", "Credits", "Exit" };
+        IMenuStrategy menuStrategy = new IMainMenuStrategy();
         Menu menu = new Menu(mainMenuOptions, menuStrategy);
         menu.ShowMenu();
     }

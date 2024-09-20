@@ -8,6 +8,6 @@ namespace SnakeGameProject
 {
     public interface IMenuStrategy
     {
-        void ExecuteOptions();
+        void ExecuteOptions(int optionSelected = -1);
     }
 }
