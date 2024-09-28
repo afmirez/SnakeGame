@@ -12,9 +12,10 @@ namespace SnakeGameProject
         public SnakeGame() { }
         public void StartGame()
         {
-            CreatePlayer();
+            Player player = CreatePlayer();
+
         }
-        public string? GetUserName ()
+        private string? GetUserName()
         {
             StringBuilder userInput = new StringBuilder();
             while (true)
@@ -33,7 +34,7 @@ namespace SnakeGameProject
                         if (userInput.Length >= 3)
                         {
                             return userInput.ToString();
-                        } 
+                        }
                     }
                     else if (key.Key == ConsoleKey.Backspace)
                     {
@@ -55,21 +56,25 @@ namespace SnakeGameProject
         }
         public Player? CreatePlayer()
         {
-
-                Console.Clear();
-                SnakeGameVisualRenders.RenderAppBanner();
-                StringBuilder input = new StringBuilder();
-                SnakeGameVisualRenders.RenderExitSpacebar();
-                Console.Write("\n\n Who will control the snake? Enter your name (min. 3 characters): ");
-                Player? player;
-                string? userName = GetUserName();
-                if (userName == null)
-                {
-                    player = null;
-                    return player;
-                }
-                player = new Player(userName);
+            Console.Clear();
+            SnakeGameVisualRenders.RenderAppBanner();
+            StringBuilder input = new StringBuilder();
+            SnakeGameVisualRenders.RenderExitSpacebar();
+            Console.Write("\n\n Who will control the snake? Enter your name (min. 3 characters): ");
+            Player? player;
+            string? userName = GetUserName();
+            if (userName == null)
+            {
+                player = null;
                 return player;
+            }
+            player = new Player(userName);
+            return player;
         }
+        public void LoadGameLevels(Player player)
+        {
+            // Initialize the game
+        }
+
     }
 }

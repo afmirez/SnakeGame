@@ -6,11 +6,7 @@ using System.Threading.Tasks;
 
 namespace SnakeGameProject
 {
-    public enum ForeGroundColors
-    {
-        Green,
-        Magenta,
-    }
+
     public static class SnakeGameVisualRenders
     {
         public static void RenderAppBanner()
@@ -29,7 +25,6 @@ namespace SnakeGameProject
             CenterElement(mainBanner);
             ResetForeGroundColor();
         }
-
         public static void RenderExitSpacebar()
         {
             SetForeGroundColor(ForeGroundColors.Magenta);
@@ -39,10 +34,7 @@ namespace SnakeGameProject
             CenterElement(ExitSpaceBar);
             ResetForeGroundColor();
         }
-
-
-        // Private methods to help render the visual elements
-        private static void SetForeGroundColor (ForeGroundColors color)
+        public static void SetForeGroundColor (ForeGroundColors color)
         {
             switch (color)
             {
@@ -52,15 +44,19 @@ namespace SnakeGameProject
                 case ForeGroundColors.Magenta:
                     Console.ForegroundColor = ConsoleColor.Magenta;
                     break;
+                case ForeGroundColors.Yellow:
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    break;
+                case ForeGroundColors.DarkCyan:
+                    Console.ForegroundColor = ConsoleColor.DarkCyan;
+                    break;
             }    
         }
-
-        private static void ResetForeGroundColor()
+        public static void ResetForeGroundColor()
         {
             Console.ForegroundColor = ConsoleColor.White;
         }
-
-        private static void CenterElement(string element)
+        public static void CenterElement(string element)
         {
             int consoleWidth = Console.WindowWidth;
             string [] lines = element.Split(new[] { "\r\n" }, StringSplitOptions.None);
@@ -68,6 +64,20 @@ namespace SnakeGameProject
             {
                 int padding = (consoleWidth - line.Length) / 2;
                 Console.WriteLine(new string(' ', padding) + line);
+            }
+        }
+        public static void CenterCreditElement(Dictionary<string, string> dictionary, int maxKeyLength, int maxValueLength)
+        {
+            int consoleWidth = Console.WindowWidth;
+
+            foreach (KeyValuePair<string, string> kvp in dictionary)
+            {
+                int currentKeyLength = maxKeyLength - kvp.Key.Length;
+                int currentValueLength = maxValueLength - kvp.Value.Length;
+                string line = $"\x1b[96m{kvp.Key}\x1b[39m" + new string(' ', currentKeyLength) + " : " + kvp.Value + new string(' ', currentValueLength);
+                // TO-DO: Fix the padding calculation. This is not OK for large screens
+                int padding = (int)((consoleWidth - line.Length) / 1.8);
+                Console.WriteLine(new string(' ', padding > 0 ? padding : 0) + line);
             }
         }
     }

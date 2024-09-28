@@ -1,0 +1,11 @@
+﻿{
+  "gameTitle": "Snake Game",
+  "gameVersion": "1.0",
+  "year": "2024",
+  "credits": {
+    "production": "Andrés Ramírez",
+    "programming": "Andrés Ramírez",
+    "inspiration": "Blockage, 1976",
+    "ASCII": "www.asciiart.eu"
+  }
+}

@@ -17,7 +17,7 @@ namespace SnakeGameProject
                     snakeGame.StartGame();
                     break;
                 case 2:
-                    Console.WriteLine("Showing Credits.");
+                    SnakeGameCredits.ShowCredits();
                     break;
                 case 3:
                     Environment.Exit(0);
