@@ -25,6 +25,12 @@ namespace SnakeGameProject
                     //currentLevel.EnterLevel(this);
                 }
 
+        //public void Update()
+        //{
+        //    _currentLevel.Update(this);  // Actualiza el nivel actual
+        //}
+
+
 
         // En el con
 

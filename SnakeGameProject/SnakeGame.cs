@@ -9,6 +9,11 @@ namespace SnakeGameProject
 {
     internal class SnakeGame
     {
+        // Esta clase puede cargar el player
+        // El mapa
+        // La comida
+        // Y arrancar el juego (niveles)
+
         public SnakeGame() { }
         public void StartGame()
         {
@@ -71,10 +76,21 @@ namespace SnakeGameProject
             player = new Player(userName);
             return player;
         }
-        public void LoadGameLevels(Player player)
+        public void LoadLevel(Player player)
         {
+            GameContext game = new GameContext();
             // Initialize the game
-        }
+            // Simulamos el bucle del juego
+            //while (true)
+            //{
+            //    game.Update();  // Actualiza el nivel actual
+            //    System.Threading.Thread.Sleep(1000);  // Simula el paso del tiempo (1 segundo)
+            //    game.TimeSurvived++;  // Incrementa el tiempo que el jugador ha sobrevivido
 
+            //    // Detener el bucle si el juego se completa
+            //    if (game.TimeSurvived > 60)
+            //        break;
+            //}
+        }
     }
 }

@@ -8,8 +8,8 @@ namespace SnakeGameProject
 {
     internal interface ILevel
     {
-        void StartLevel();
-        void UpdateLevel();
-        void EndLevel();
+        void StartLevel(GameContext context);
+        void UpdateLevel(GameContext context);
+        void EndLevel(GameContext context);
     }
 }
