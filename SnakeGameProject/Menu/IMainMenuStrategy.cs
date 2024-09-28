@@ -10,25 +10,18 @@ namespace SnakeGameProject
     {
         public void ExecuteOptions(int optionSelected)
         {
-            //Console.Write("\nChoose an option: ");
-            //string? option = Console.ReadLine();
-
             switch (optionSelected)
             {
                 case 1:
-                    SnakeGame game = new SnakeGame();
-                    game.StartGame();
+                    SnakeGame snakeGame = new SnakeGame();
+                    snakeGame.StartGame();
                     break;
                 case 2:
-                    Console.WriteLine("Showing Credits.");
+                    SnakeGameCredits.ShowCredits();
                     break;
                 case 3:
                     Environment.Exit(0);
                     break;
-                //default:
-                //    Console.Clear();
-                //    Console.Write("Invalid option. Try again...\n\n\n");
-                //    break;
             }
         }
     }
