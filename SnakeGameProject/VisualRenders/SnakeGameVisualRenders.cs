@@ -80,5 +80,70 @@ namespace SnakeGameProject
                 Console.WriteLine(new string(' ', padding > 0 ? padding : 0) + line);
             }
         }
+
+
+        // This works but we need to refactor it.
+        // Not sure where I will use this.
+
+        public static void RenderMap(Map map, Snake snake)
+        {
+            int mapHeight = map.GetHeight();
+            int mapWidth = map.GetWidth();
+            int[,] mapArray = map.GetMapArray();
+            List<(int x, int y)> snakeBody = snake.GetSnakeBody();
+
+            for (int i = 0; i < mapHeight; i++)
+            {
+                for (int j = 0; j < mapWidth; j++)
+                {
+
+                    if (mapArray[i, j] == 1)
+                    {
+                        if (i == 0 && j == 0)
+                        {
+                            Console.Write("╔");
+                        }
+                        else if (i == mapHeight - 1 && j == 0)
+                        {
+                            Console.Write("╚");
+                        }
+                        else if (j == mapWidth - 1 && i == 0)
+                        {
+                            Console.Write("╗");
+                        }
+                        else if (j == mapWidth - 1 && i == mapHeight - 1)
+                        {
+                            Console.Write("╝");
+                        }
+                        else if (i == 0 || i == mapHeight - 1)
+                        {
+                            Console.Write("═");
+                        }
+                        else if (j == 0 || j == mapWidth - 1)
+                        {
+                            Console.Write("║");
+                        }
+                    }
+                    else if (snakeBody.Contains((i, j)))
+                    {
+                        if (snakeBody[0].Equals((i, j)))
+                        {
+                            Console.Write("o");
+                        }
+                        else
+                        {
+                            Console.Write("-");
+                        }
+                    }
+                    else
+                    {
+                        Console.Write(" ");
+                    }
+                }
+                Console.WriteLine();
+            }
+            Console.ReadLine();
+
+        }
     }
 }

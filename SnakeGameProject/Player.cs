@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SnakeGameProject
 {
-    internal class Player
+    public class Player
     {
         private string _id;
         private string _name;

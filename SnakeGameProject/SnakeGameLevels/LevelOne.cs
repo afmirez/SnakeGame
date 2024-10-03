@@ -10,6 +10,7 @@ namespace SnakeGameProject
     {
         public void EndLevel(GameContext context)
         {
+            context.currentScore = 0;
             // Guardar el score
             // O hacer lo que sea que signifique terminar el nivel uno
             throw new NotImplementedException();

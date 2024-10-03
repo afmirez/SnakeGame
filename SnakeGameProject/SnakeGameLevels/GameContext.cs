@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SnakeGameProject;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,49 +7,58 @@ using System.Threading.Tasks;
 
 namespace SnakeGameProject
 {
-    internal class GameContext
+    public class GameContext
     {
         private ILevel _currentLevel;
-        // Manejar el tiempo sobrevivido en propiedad
-        // La snake
-        // El Mapa en si que debe ser maleable lol
-        // la comida
-        // EL PLAYER  --> maz score
-        // CURRENT SCORE esto es de aca interno
+        private Player _player;
+        public Snake _snake;
+        private Food _food;
+        private Map _map;
+        public int currentScore = 0;
+        public GameContext(Player player)
+        {
+            // Yo creo que hay muchos valores sueltos como la posicion de la comida y la serpiente, tamano del mapa.
+            // Esto deberia cargarse desde un JSON, hacerlo al final para avanzar. 
+            _player = player;
+            _map = new Map(13,38);
+            _snake = new Snake(7, 14);
+            _food = new Food((5, 5));
+            _currentLevel = new LevelOne();
+            // Lo que sigue es trabajar en el nivel 1, que es el que se carga por defecto.
+        }
 
-        // ver de todo esto que voy a recibir desde afuear y definirlo en el constructoir
-        // o inizilizarlo todo manualmente
-
-             public void SetLevel(ILevel newLevel)
-                {
-                    //currentLevel = newLevel;
-                    //currentLevel.EnterLevel(this);
-                }
-
-        //public void Update()
-        //{
-        //    _currentLevel.Update(this);  // Actualiza el nivel actual
-        //}
-
-
-
-        // En el con
-
-        //public GameContext(ILevel level)
-        //{
-        //    _currentLevel = level;
-        //}
-        //public void StartGame()
-        //{
-        //    _currentLevel.StartLevel();
-        //}
-        //public void UpdateGame()
-        //{
-        //    _currentLevel.UpdateLevel();
-        //}
-        //public void EndGame()
-        //{
-        //    _currentLevel.EndLevel();
-        //}
+        public void testInit ()
+        {
+            // La serpiente se mueve!!
+            Console.WriteLine();
+            SnakeGameVisualRenders.RenderMap(_map, _snake);
+            Console.ReadLine();
+            _snake.ExecuteMoveAction("up");
+            SnakeGameVisualRenders.RenderMap(_map, _snake);
+            Console.ReadLine();
+            _snake.ExecuteMoveAction("up");
+            SnakeGameVisualRenders.RenderMap(_map, _snake);
+            Console.ReadLine();
+            _snake.ExecuteMoveAction("up");
+            SnakeGameVisualRenders.RenderMap(_map, _snake);
+            Console.ReadLine();
+            _snake.ExecuteMoveAction("up");
+            SnakeGameVisualRenders.RenderMap(_map, _snake);
+            Console.ReadLine();
+            _snake.ExecuteMoveAction("right");
+            SnakeGameVisualRenders.RenderMap(_map, _snake);
+            Console.ReadLine();
+            _snake.ExecuteMoveAction("right");
+            SnakeGameVisualRenders.RenderMap(_map, _snake);
+            Console.ReadLine();
+            _snake.ExecuteMoveAction("right");
+            SnakeGameVisualRenders.RenderMap(_map, _snake);
+            Console.ReadLine();
+            _snake.ExecuteMoveAction("down");
+            SnakeGameVisualRenders.RenderMap(_map, _snake);
+            Console.ReadLine();
+            _snake.ExecuteMoveAction("down");
+            SnakeGameVisualRenders.RenderMap(_map, _snake);
+        }
     }
 }
