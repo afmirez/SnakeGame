@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.FileIO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,46 +12,69 @@ namespace SnakeGameProject
         Black,
         White
     }
-
-    public class Menu 
+    public class Menu
     {
         private string[] _options;
         private IMenuStrategy _strategy;
         public int selectedIndex = 0;
-        public Menu(string[] options, IMenuStrategy strategy)
+        public int previousIndex = 0;
+        public int _topSpace;
+        public Menu(string[] options, IMenuStrategy strategy, int? topSpace)
         {
+
             _strategy = strategy;
             _options = options;
+            _topSpace = topSpace ?? 0;
         }
         public void ShowMenu()
         {
             Console.CursorVisible = false;
+            RenderMenu();
             while (true)
             {
-                SnakeGameVisualRenders.RenderAppBanner();
-                for (int i = 0; i < _options.Length; i++)
-                {
-                    string currentOption = _options[i];
-                    string prefix;
-
-                    if (i == selectedIndex)
-                    {
-                        prefix = ">";
-                        ResetColor(BackgroundColor.White);
-                    }
-                    else
-                    {
-                        prefix = " ";
-                        ResetColor(BackgroundColor.Black);
-                    }
-
-                    Console.WriteLine($"{prefix} {_options[i]}");
-                   
-                }
+                RenderMenu();
                 SelectOption();
             }
         }
+        private void RenderMenu()
+        {
+            for (int i = 0; i < _options.Length; i++) {
+                string currentOption = _options[i];
+                if (i == selectedIndex)
+                {
+                    HighlightOption(true, currentOption);
+                } else
+                {
+                    HighlightOption(false, currentOption);
+                }
+            }
+        }
+        private void UpdateOption(int index, bool isSelected)
+        {
+            Console.SetCursorPosition(0, index);
+            HighlightOption(isSelected, _options[index]);
+        }
+        private void HighlightOption(bool isOptionSelected, string option)
+        {
+            int optionIndex = Array.IndexOf(_options, option);
 
+            /*Set the cursor position at the beginning of the line, 
+               adjusted by the height of the banner and the option's index*/
+            Console.SetCursorPosition(0, _topSpace + optionIndex);
+
+            string prefix = isOptionSelected ? "> " : "  ";
+
+            if (isOptionSelected)
+            {
+                ResetColor(BackgroundColor.White);
+            }
+            else
+            {
+                ResetColor(BackgroundColor.Black);
+            }
+
+            Console.WriteLine(prefix + option);
+        }
         private void SelectOption()
         {
             ConsoleKeyInfo selectedKey;
@@ -60,6 +85,8 @@ namespace SnakeGameProject
             while (selectedKey.Key != ConsoleKey.UpArrow &&
                    selectedKey.Key != ConsoleKey.DownArrow &&
                    selectedKey.Key != ConsoleKey.Enter);
+
+            previousIndex = selectedIndex;
 
             if (selectedKey.Key == ConsoleKey.DownArrow && selectedIndex < _options.Length - 1)
             {
@@ -73,9 +100,10 @@ namespace SnakeGameProject
             {
                 ResetColor(BackgroundColor.Black);
                 _strategy.ExecuteOptions(selectedIndex + 1);
+                return;
             }
-            ResetColor(BackgroundColor.Black);
-            Console.Clear();
+            UpdateOption(previousIndex, false);
+            UpdateOption(selectedIndex, true);
         }
         private void ResetColor(BackgroundColor color)
         {

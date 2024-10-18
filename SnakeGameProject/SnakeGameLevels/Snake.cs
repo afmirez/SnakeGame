@@ -5,22 +5,27 @@ namespace SnakeGameProject
     public class Snake
     {
         private List<(int x, int y)> _snakeBody = new List<(int x, int y)>();
+        private Action MoveUp;
+        private Action MoveDown;
+        private Action MoveLeft;
+        private Action MoveRight;
 
-        public Action MoveUp;
-        public Action MoveDown;
-        public Action MoveLeft;
-        public Action MoveRight;
+        public event Action SnakeDieHandler;
+        //public delegate void SnakeDieHandler();
+        //public event SnakeDieHandler OnSnakeDie;
+        public bool isAlive { get; private set; }
+
         public Snake(int xPosition, int head)
         {
+            isAlive = true;
             InitSnake(xPosition, head);
             InitMoveActions();
         }
         private void InitSnake(int x, int y) {
-            for (int i = 1; i <= 4; i++) {
+            for (int i = 1; i <= 7; i++) {
                 _snakeBody.Add((x, y - i));
             }
         }
-
         private void InitMoveActions()
         {
             MoveUp = () => MoveSnake((-1,0));
@@ -28,55 +33,54 @@ namespace SnakeGameProject
             MoveLeft = () => MoveSnake((0, -1));
             MoveRight = () => MoveSnake((0, 1));
         }
-
-        public void ExecuteMoveAction (string action)
-        {
-            switch (action)
-            {
-                case "up":
-                    MoveUp();
-                    break;
-                case "down":
-                    MoveDown();
-                    break;
-                case "left":
-                    MoveLeft();
-                    break;
-                case "right":
-                    MoveRight();
-                    break;
-            }
-
-        }
-
         public List<(int x, int y)> GetSnakeBody()
         {
             return _snakeBody;
         }
-        public (int,int) GetSnakeHead()
+
+        public (int x, int y) GetSnakeHead()
         {
             return _snakeBody[0];
         }
-
         public void MoveSnake((int x, int y) direction)
         {
             (int x, int y) newHead = (direction.x + _snakeBody[0].x, direction.y + _snakeBody[0].y);
 
             for (int i = _snakeBody.Count - 1; i > 0; i--)
             {
-                _snakeBody[i] = _snakeBody[i - 1]; 
+                _snakeBody[i] = _snakeBody[i - 1];
             }
             _snakeBody[0] = newHead;
         }
-
+        public void ExecuteMoveAction(SnakeMovement move)
+        {
+            switch (move)
+            {
+                case SnakeMovement.Up:
+                    MoveUp();
+                    break;
+                case SnakeMovement.Down:
+                    MoveDown();
+                    break;
+                case SnakeMovement.Left:
+                    MoveLeft();
+                    break;
+                case SnakeMovement.Right:
+                    MoveRight();
+                    break;
+            }
+        }
         public void EatFood()
         {
-            //_snakeBody.Add()
+            (int x, int y) tail = _snakeBody.Last();
+            (int x , int y ) newElement = (tail.x, tail.y - 1);
+            _snakeBody.Add(newElement);
         }
-
         public void Die ()
         {
-            // Die
+            isAlive = false;
+            SnakeDieHandler?.Invoke();  
         }
+
     }
 }

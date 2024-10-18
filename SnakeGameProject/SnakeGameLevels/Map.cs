@@ -11,6 +11,7 @@ namespace SnakeGameProject
         private int _width { get;}
         private int _height { get; }
         private int[,] _map { get; }
+
         private const int WALL = 1;
         public Map(int height, int width)
         {
@@ -18,6 +19,11 @@ namespace SnakeGameProject
             _width = width;
             _map = new int[_height, _width];
             SetMap();
+        }
+
+        public int[,] GetMap()
+        {
+            return _map;
         }
         public int GetWidth()
         {

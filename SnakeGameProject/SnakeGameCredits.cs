@@ -35,6 +35,7 @@ namespace SnakeGameProject
             if (selectedKey.Key == ConsoleKey.Spacebar)
             {
                 Console.Clear();
+                SnakeGameVisualRenders.RenderAppBanner();
             }
         }
         private static void CreditsBuildier()

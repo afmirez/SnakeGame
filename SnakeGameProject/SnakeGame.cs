@@ -14,8 +14,13 @@ namespace SnakeGameProject
         public void StartGame()
         {
             Player player = CreatePlayer();
-            // LoadLevels and pass player
             GameContext game = new GameContext(player);
+            if (player == null)
+            {
+                Console.Clear();
+                SnakeGameVisualRenders.RenderAppBanner();
+                return;
+            }
             game.testInit();
 
         }

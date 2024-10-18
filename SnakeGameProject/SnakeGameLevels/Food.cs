@@ -1,21 +1,24 @@
 ﻿namespace SnakeGameProject
 {
-    public class Food
+    static public class Food
     {
-        private (int x, int y) _foodPosition { get; set; }
+        static private (int x, int y)? _foodPosition { get; set; }
 
-        public Food((int x, int y) initPosition)
-        {
-            _foodPosition = (initPosition);
-        }
-        public (int x, int y)? GetFoodPosition()
+        public static (int x, int y)? GetFoodPosition()
         {
             return _foodPosition;
         }
 
-        public void SetFoodPosition((int x, int y) position)
+        public static void SetFoodPosition((int x, int y)? position)
         {
-            _foodPosition = position;
+            if (position != null)
+            {
+                _foodPosition = position;
+            }
+            else
+            {
+                _foodPosition = null;
+            }
         }
 
     }
