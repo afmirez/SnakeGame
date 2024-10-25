@@ -52,7 +52,6 @@ namespace SnakeGameProject
             SnakeGameOptions();
             //Console.ReadLine();
         }
-
         public void SnakeGameOptions()
         {
             ConsoleKeyInfo selectedKey;
@@ -80,10 +79,8 @@ namespace SnakeGameProject
         public void testInit ()
         {
             Console.Clear();
-            
             gameLogic.MoveSnake(_snake, SnakeMovement.Right, _map);
         }
-
         public void RestartGame()
         {
             currentScore = 0;
@@ -99,14 +96,6 @@ namespace SnakeGameProject
         {
             currentScore = currentScore + 1;
             currentScoreChangeHandler?.Invoke();
-            //if (currentScore >  _player.MaxScore)
-            //{
-            //    _player.UpdateMaxScore(currentScore);
-            //    maxScore = currentScore;
-            //    playerMaxScoreUpdateHandler?.Invoke();
-            //}
-
-            // This will generate the update in the player update, the internal update of the maxScore, and the visual render
             if (currentScore > maxScore)
             {
                 _player.UpdateMaxScore(currentScore);
@@ -116,15 +105,11 @@ namespace SnakeGameProject
 
         }
 
-
         // Incluir logica del nivel -- Incluir metodo para cargar el siguiente nivel o set level
-
-        // Incluir nuevo menu para regresar al inicio o continuar el nivel
-        // Pensar en renders de final de juego        // Limpiar el codigo -- Ver si se puede mejorar los visual renders
-        // Incluir logica del nivel -- Incluir metodo para cargar el siguiente nivel o set level
-        // Incluir nuevo menu para regresar al inicio o continuar el nivel
-        // Pensar en renders de final de juego
-
+        //public void SetLevel(ILevel level)
+        //{
+        //    _currentLevel = level;
+        //}
 
     }
 }

@@ -14,7 +14,6 @@ namespace SnakeGameProject
         public void StartGame()
         {
             Player player = CreatePlayer();
-
             
             if (player == null)
             {
@@ -22,13 +21,13 @@ namespace SnakeGameProject
                 SnakeGameVisualRenders.RenderAppBanner();
                 return;
             }
+
             GameContext game = new GameContext(player);
             SnakeGameVisualRenders.SetGameContext(game);
             SnakeGameVisualRenders.SuscribeToEvents();
 
-            // Esto debe estar ligado es a un nivel, o algo por el estilo.
-            // testInit debe ser removido
-            // 
+            // Esta logica va a cambiar para que el inicio se de en base al nivel.
+            // Lo unico que obtenemos afuera es el player, lo cual lo veo bien.
             game.testInit();
 
         }
@@ -88,9 +87,11 @@ namespace SnakeGameProject
             player = new Player(userName);
             return player;
         }
-        public void LoadLevels(Player player)
-        {
-            //GameContext game = new GameContext(player);
-        }
+
+
+        //public void LoadLevels(Player player)
+        //{
+        //    //GameContext game = new GameContext(player);
+        //}
     }
 }
