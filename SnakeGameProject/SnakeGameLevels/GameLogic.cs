@@ -19,6 +19,7 @@ namespace SnakeGameProject
         private System.Timers.Timer? generateFoodTimer;
         private System.Timers.Timer? removeFoodTimer;
         private bool isSnakeMoving { get; set; }
+
         private bool isGameRunning;
         public GameLogic(Map map, Snake snake) {
             isGameRunning = true;
@@ -30,21 +31,24 @@ namespace SnakeGameProject
 
        public void OnSnakeMoving ()
        {
-            //(int x, int y) oldTail = _snake.GetSnakeBody().Last();
-            //(int x, int y) oldTail = _snake.GetSnakeHead();
             if (isGameRunning)
             {
                 IsThereCollision();
                 CheckIfFoodEaten();
-                //Console.Clear();
-                // SnakeGameVisualRenders.RenderMap(_map, _snake);
-                //oldTail = _snake.GetSnakeBody().Last();
-                SnakeGameVisualRenders.UpdateSnake(_snake);
- 
-                //SnakeGameVisualRenders.UpdateFood();
+                if (_snake.isAlive)
+                {
+                    SnakeGameVisualRenders.UpdateSnake(_snake);
+                }
+        
             }
         }
 
+
+        //public void RestartGame()
+        //{
+        //    isGameRunning = true;
+
+        //}
         public void GameOver()
         {
             isGameRunning = false;
@@ -52,6 +56,16 @@ namespace SnakeGameProject
             generateFoodTimer?.Dispose();
             removeFoodTimer?.Stop();
             removeFoodTimer?.Dispose();
+        }
+
+        public void RestartGame()
+        {
+            
+            isGameRunning = true;
+            //_map.SetMap();
+            SetTimers();
+            generateFoodTimer?.Start();
+            removeFoodTimer?.Start();
         }
 
         private void SetTimers()
@@ -81,18 +95,21 @@ namespace SnakeGameProject
             Food.SetFoodPosition(null);
         }
 
-        //Refactor this logic!!
         public void MoveSnake(Snake snake, SnakeMovement lastMovement, Map map)
         {
-            // New. No loop-clear needed. The render should be in charge of the snake movement
+            
             SnakeGameVisualRenders.RenderMap(_map, _snake);
+            
             isSnakeMoving = true;
             ConsoleKeyInfo key;
             SnakeMovement currentMovement = lastMovement;
 
             while (isGameRunning)
             {
+                // Defines how fast the snake moves. This should be sent from the level.
                 Thread.Sleep(70);
+                // No se si hacerlo aca, o solamente suscribirme a cambios
+                //SnakeGameVisualRenders.ShowStats();
                 if (snake.isAlive)
                 {
                     snake.ExecuteMoveAction(currentMovement);
@@ -155,7 +172,6 @@ namespace SnakeGameProject
             (int, int)? foodPosition = Food.GetFoodPosition();
             if (foodPosition != null && snakeHead == foodPosition)
             {
-                //SnakeGameVisualRenders.RemoveFood(foodPosition);
                 Food.SetFoodPosition(null);
                 _snake.EatFood();
             }

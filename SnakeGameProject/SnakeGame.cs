@@ -14,13 +14,21 @@ namespace SnakeGameProject
         public void StartGame()
         {
             Player player = CreatePlayer();
-            GameContext game = new GameContext(player);
+
+            
             if (player == null)
             {
                 Console.Clear();
                 SnakeGameVisualRenders.RenderAppBanner();
                 return;
             }
+            GameContext game = new GameContext(player);
+            SnakeGameVisualRenders.SetGameContext(game);
+            SnakeGameVisualRenders.SuscribeToEvents();
+
+            // Esto debe estar ligado es a un nivel, o algo por el estilo.
+            // testInit debe ser removido
+            // 
             game.testInit();
 
         }

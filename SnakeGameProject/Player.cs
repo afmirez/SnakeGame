@@ -15,17 +15,13 @@ namespace SnakeGameProject
         {
             _name = name;
             _id = Guid.NewGuid().ToString();
+            MaxScore = 0;
         }
         public string GetName() { return _name; }
         public string GetId() { return _id; }
-        public bool UpdateMaxScore (int newMaxScore)
+        public void UpdateMaxScore (int newMaxScore)
         {
-            if (newMaxScore > MaxScore)
-            {
-                MaxScore = newMaxScore; 
-                return true;
-            }
-            return false;
+            MaxScore = newMaxScore; 
         }
     }
 }

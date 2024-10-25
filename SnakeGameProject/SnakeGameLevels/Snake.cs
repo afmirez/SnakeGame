@@ -11,13 +11,18 @@ namespace SnakeGameProject
         private Action MoveRight;
 
         public event Action SnakeDieHandler;
-        //public delegate void SnakeDieHandler();
-        //public event SnakeDieHandler OnSnakeDie;
+        public event Action SnakeEatHandler;
+
         public bool isAlive { get; private set; }
+
+        private int initXPosition;
+        private int initHeadPosition;
 
         public Snake(int xPosition, int head)
         {
             isAlive = true;
+            initXPosition = xPosition;
+            initHeadPosition = head;
             InitSnake(xPosition, head);
             InitMoveActions();
         }
@@ -75,11 +80,19 @@ namespace SnakeGameProject
             (int x, int y) tail = _snakeBody.Last();
             (int x , int y ) newElement = (tail.x, tail.y - 1);
             _snakeBody.Add(newElement);
+            SnakeEatHandler?.Invoke(); 
         }
         public void Die ()
         {
             isAlive = false;
             SnakeDieHandler?.Invoke();  
+        }
+
+        public void RegenerateSnake()
+        {
+            _snakeBody.Clear();
+            InitSnake(initXPosition, initHeadPosition);
+            isAlive = true;
         }
 
     }
