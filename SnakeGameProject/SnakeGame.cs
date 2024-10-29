@@ -28,7 +28,7 @@ namespace SnakeGameProject
 
             // Esta logica va a cambiar para que el inicio se de en base al nivel.
             // Lo unico que obtenemos afuera es el player, lo cual lo veo bien.
-            game.testInit();
+            game.initLevel();
 
         }
         private string? GetUserName()
@@ -89,9 +89,5 @@ namespace SnakeGameProject
         }
 
 
-        //public void LoadLevels(Player player)
-        //{
-        //    //GameContext game = new GameContext(player);
-        //}
     }
 }

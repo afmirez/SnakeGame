@@ -92,7 +92,11 @@ namespace SnakeGameProject
         {
             _snakeBody.Clear();
             InitSnake(initXPosition, initHeadPosition);
-            isAlive = true;
+            if (!isAlive)
+            {
+                isAlive = true;
+            }
+
         }
 
     }

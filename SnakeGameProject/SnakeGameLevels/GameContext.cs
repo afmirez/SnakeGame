@@ -12,6 +12,7 @@ namespace SnakeGameProject
     public class GameContext
     {
         private ILevel _currentLevel;
+        public string _currentLevelName;
         private Player _player;
         public Snake _snake;
         private Map _map;
@@ -21,37 +22,89 @@ namespace SnakeGameProject
 
         public event Action currentScoreChangeHandler;
         public event Action playerMaxScoreUpdateHandler;
+        public event Action levelCompleteHandler;
+
 
         public GameContext(Player player)
         {
-            // Yo creo que hay muchos valores sueltos como la posicion de la comida y la serpiente, tamano del mapa.
-            // Esto deberia cargarse desde un JSON, hacerlo al final para avanzar. 
             _player = player;
             _map = new Map(13,38);
             _snake = new Snake(7, 14);
-            //currentScore = _player.MaxScore;
             maxScore = _player.MaxScore;
-            _currentLevel = new LevelOne();
-            // Lo que sigue es trabajar en el nivel 1, que es el que se carga por defecto.
             _snake.SnakeDieHandler += OnSnakeDie;
             _snake.SnakeEatHandler += onSnakeEat;
             gameLogic = new GameLogic(_map, _snake);
-
+            _currentLevel = new LevelOne(this, gameLogic);
+            _currentLevelName = _currentLevel.Name;
         }
         
         public void OnSnakeDie()
         {
+
             int top = SnakeGameVisualRenders.GetMainBannerHeight() + SnakeGameVisualRenders.GetMapHeight() + 2;
             int padding = SnakeGameVisualRenders.GetMapPadding();
-            
             Console.SetCursorPosition(padding, top + 1);
             Console.WriteLine($"\x1b[91mTHE SNAKE HAS DIED\x1b[39m");
             gameLogic.GameOver();
             Console.SetCursorPosition(padding, top + 2);
             Console.WriteLine($"\x1b[95mPress SPACE to go back or ENTER to restart\x1b[39m");
+
+
             SnakeGameOptions();
-            //Console.ReadLine();
+         
         }
+
+        public void SetNewLevel(ILevel level)
+        {
+            _currentLevel.FinishLevel();
+            //_snake.SnakeEatHandler -= onSnakeEat;
+            gameLogic.GameOver();
+            int top = SnakeGameVisualRenders.GetMainBannerHeight() + SnakeGameVisualRenders.GetMapHeight() + 2;
+            int padding = SnakeGameVisualRenders.GetMapPadding();
+            Console.SetCursorPosition(padding, top + 1);
+            Console.WriteLine($"\x1b[94mTHE LEVEL HAS BEEN COMPLETED\x1b[39m");
+            Console.SetCursorPosition(padding, top + 2);
+            Console.WriteLine($"\x1b[95mPress SPACE to go back or ENTER to continue\x1b[39m");
+            SnakeGameLevelOptions(level);
+        }
+
+
+        public void onLevelComplete()
+        {
+            // Esto sera usado para el RENDER, no para la logica
+            levelCompleteHandler?.Invoke();
+        }
+
+        public void SnakeGameLevelOptions(ILevel NewLevel)
+        {
+            ConsoleKeyInfo selectedKey;
+            do
+            {
+                selectedKey = Console.ReadKey(true);
+            }
+            while (selectedKey.Key != ConsoleKey.Spacebar &&
+                   selectedKey.Key != ConsoleKey.Enter);
+
+            if (selectedKey.Key == ConsoleKey.Spacebar)
+            {
+                _snake.SnakeDieHandler -= OnSnakeDie;
+                _snake.SnakeEatHandler -= onSnakeEat;
+                NewLevel.FinishLevel();
+                _snake.Die();
+                Console.Clear();
+                SnakeGameVisualRenders.RenderAppBanner();
+            }
+            else if (selectedKey.Key == ConsoleKey.Enter)
+            {
+                _currentLevel = NewLevel;
+                _currentLevelName = _currentLevel.Name;
+                Console.Clear();
+                _snake.RegenerateSnake();
+                _currentLevel.StartLevel();
+            }
+        }
+
+
         public void SnakeGameOptions()
         {
             ConsoleKeyInfo selectedKey;
@@ -64,6 +117,9 @@ namespace SnakeGameProject
 
             if (selectedKey.Key == ConsoleKey.Spacebar)
             {
+                _currentLevel.FinishLevel();
+                _snake.SnakeDieHandler -= OnSnakeDie;
+                _snake.SnakeEatHandler -= onSnakeEat;
                 Console.Clear();
                 SnakeGameVisualRenders.RenderAppBanner();
             }
@@ -71,45 +127,37 @@ namespace SnakeGameProject
             {
                 Console.Clear();
                 RestartGame();
-                //gameLogic.GameOver();
-                //gameLogic = new GameLogic(_map, _snake);
-                //gameLogic.OnSnakeMoving();
             }
         }
-        public void testInit ()
+
+        public void initLevel()
         {
-            Console.Clear();
-            gameLogic.MoveSnake(_snake, SnakeMovement.Right, _map);
+            _currentLevel.StartLevel();
         }
+
+
         public void RestartGame()
         {
             currentScore = 0;
-            
             _snake.RegenerateSnake();
             gameLogic.RestartGame();
             maxScore = _player.MaxScore;
-            gameLogic.MoveSnake(_snake, SnakeMovement.Right, _map);
-
+            gameLogic.MoveSnake(SnakeMovement.Right);
         }
 
         public void onSnakeEat()
         {
-            currentScore = currentScore + 1;
-            currentScoreChangeHandler?.Invoke();
-            if (currentScore > maxScore)
+           if (_snake.isAlive)
             {
-                _player.UpdateMaxScore(currentScore);
-                maxScore = currentScore;
-                playerMaxScoreUpdateHandler?.Invoke();
+                currentScore = currentScore + 1;
+                if (currentScore > maxScore)
+                {
+                    _player.UpdateMaxScore(currentScore);
+                    maxScore = currentScore;
+                    playerMaxScoreUpdateHandler?.Invoke();
+                }
+                currentScoreChangeHandler?.Invoke();
             }
-
         }
-
-        // Incluir logica del nivel -- Incluir metodo para cargar el siguiente nivel o set level
-        //public void SetLevel(ILevel level)
-        //{
-        //    _currentLevel = level;
-        //}
-
     }
 }

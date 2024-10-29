@@ -30,6 +30,14 @@ namespace SnakeGameProject
         {
             _gameContext.currentScoreChangeHandler += UpdateStatsCurrentScore;
             _gameContext.playerMaxScoreUpdateHandler += UpdateStatsMaxScore;
+            _gameContext.levelCompleteHandler += UpdateCurrentLevel;
+        }
+
+        public static void UnsuscribeToEvents()
+        {
+            _gameContext.currentScoreChangeHandler -= UpdateStatsCurrentScore;
+            _gameContext.playerMaxScoreUpdateHandler -= UpdateStatsMaxScore;
+            _gameContext.levelCompleteHandler -= UpdateCurrentLevel;
         }
 
         private static int scoresMaxLength = 0;
@@ -225,7 +233,6 @@ namespace SnakeGameProject
 
         public static void ShowStats()
         {
-            // El problema es ACA
 
             int maxKeyLength = 0;
             int maxValueLength = 0;
@@ -236,11 +243,6 @@ namespace SnakeGameProject
                 { "Max Score", _gameContext.maxScore }
             };
 
-            //foreach (string key in gameStats.Keys)
-            //{
-            //    int currentKeyLength = key.Length;
-            //    maxKeyLength = currentKeyLength > maxKeyLength ? currentKeyLength : maxKeyLength;
-            //}
 
             foreach (KeyValuePair<string, int> kvp in gameStats)
             {
@@ -254,6 +256,9 @@ namespace SnakeGameProject
 
             int top = GetMainBannerHeight() + GetMapHeight();
 
+
+            CenterElement($"\x1b[93m{_gameContext._currentLevelName}\x1b[39m");
+
             foreach (KeyValuePair<string, int> kvp in gameStats)
             {
                 int currentKeyLength = maxKeyLength - kvp.Key.Length;
@@ -266,11 +271,20 @@ namespace SnakeGameProject
             }
         }
 
-
-        // Render esto en una sola funcion, y que los events hanlders pasen los valores correctos
-        public static void UpdateStatsCurrentScore()
+        public static void UpdateCurrentLevel()
         {
             int top = GetMainBannerHeight() + GetMapHeight();
+            int left = scoresMaxLength + mapPadding;
+            int stringLength = _gameContext._currentLevelName.Length;
+            Console.SetCursorPosition(left, top);
+            Console.Write(new string(' ', stringLength));
+            Console.SetCursorPosition(left, top);
+            // Evaluar esto: 
+            Console.Write(_gameContext._currentLevelName);
+        }
+        public static void UpdateStatsCurrentScore()
+        {
+            int top = GetMainBannerHeight() + GetMapHeight() + 1;
             int left = scoresMaxLength + mapPadding;
             Console.SetCursorPosition(left, top);
             Console.Write("   ");
@@ -280,7 +294,8 @@ namespace SnakeGameProject
 
         public static void UpdateStatsMaxScore()
         {
-            int top = GetMainBannerHeight() + GetMapHeight() + 1;
+            // LA LOGICA DEL CAMBIO DEBE SER UPDATED PORQUE ACA QUEREMOS BORRRAR TODA LA LINEA, NO SOLO UNA PARTTE
+            int top = GetMainBannerHeight() + GetMapHeight() + 2;
             int left = scoresMaxLength + mapPadding;
             Console.SetCursorPosition(left, top);
             Console.Write("   ");

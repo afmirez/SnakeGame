@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace SnakeGameProject
 {
-    internal interface ILevel
+    public interface ILevel
     {
-        void StartLevel(GameContext context);
-        void UpdateLevel(GameContext context);
-        void EndLevel(GameContext context);
+        string Name { get; }
+        void StartLevel();
+        void EndLevel();
+        void FinishLevel(); 
     }
 }

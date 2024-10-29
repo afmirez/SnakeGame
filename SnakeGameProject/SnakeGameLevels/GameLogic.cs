@@ -10,8 +10,15 @@ using System.Xml.Linq;
 
 namespace SnakeGameProject
 {
-    class GameLogic
+    public class GameLogic
     {
+
+        // 10.25.24
+        private int _snakeSpeed;
+        private int _foodSpawnRate;
+        private int _foodRemoveRate;
+
+
         // 1. Implementar change level para cambiar valor de propiedades
         private Snake _snake;
         private Map _map;
@@ -22,14 +29,27 @@ namespace SnakeGameProject
 
         private bool isGameRunning;
         public GameLogic(Map map, Snake snake) {
-            isGameRunning = true;
+            //isGameRunning = true;
             _map = map;
             _snake = snake;
-            SetTimers();
+            //SetTimers();
             SnakeMovementHandler += OnSnakeMoving;
         }
 
-       public void OnSnakeMoving ()
+        public void SetSnakeLogicProperties(int snakeSpeed, int foodSpawnRate, int foodRemoveRate)
+        {
+            _snakeSpeed = snakeSpeed;
+            _foodSpawnRate = foodSpawnRate;
+            _foodRemoveRate = foodRemoveRate;
+        }
+
+        public void InitGame() {
+            isGameRunning = true;
+            SetTimers();
+        }
+
+      
+        public void OnSnakeMoving ()
        {
             if (isGameRunning)
             {
@@ -43,12 +63,6 @@ namespace SnakeGameProject
             }
         }
 
-
-        //public void RestartGame()
-        //{
-        //    isGameRunning = true;
-
-        //}
         public void GameOver()
         {
             isGameRunning = false;
@@ -60,22 +74,21 @@ namespace SnakeGameProject
 
         public void RestartGame()
         {
-            
             isGameRunning = true;
-            //_map.SetMap();
             SetTimers();
             generateFoodTimer?.Start();
             removeFoodTimer?.Start();
         }
 
+
         private void SetTimers()
         {
-            generateFoodTimer = new System.Timers.Timer(10000);
+            generateFoodTimer = new System.Timers.Timer(_foodSpawnRate);
             generateFoodTimer.Elapsed += OnGenerateFoodTimer;
             generateFoodTimer.AutoReset = true;
             generateFoodTimer.Enabled = true;
 
-            removeFoodTimer = new System.Timers.Timer(5000);
+            removeFoodTimer = new System.Timers.Timer(_foodRemoveRate);
             removeFoodTimer.Elapsed += OnRemoveFoodTimer;
             removeFoodTimer.AutoReset = true;
             removeFoodTimer.Enabled = true;
@@ -95,7 +108,7 @@ namespace SnakeGameProject
             Food.SetFoodPosition(null);
         }
 
-        public void MoveSnake(Snake snake, SnakeMovement lastMovement, Map map)
+        public void MoveSnake( SnakeMovement lastMovement)
         {
             
             SnakeGameVisualRenders.RenderMap(_map, _snake);
@@ -107,12 +120,11 @@ namespace SnakeGameProject
             while (isGameRunning)
             {
                 // Defines how fast the snake moves. This should be sent from the level.
-                Thread.Sleep(70);
-                // No se si hacerlo aca, o solamente suscribirme a cambios
-                //SnakeGameVisualRenders.ShowStats();
-                if (snake.isAlive)
+                Thread.Sleep(_snakeSpeed);
+
+                if (_snake.isAlive)
                 {
-                    snake.ExecuteMoveAction(currentMovement);
+                    _snake.ExecuteMoveAction(currentMovement);
                     SnakeMovementHandler?.Invoke();
 
                     if (Console.KeyAvailable)
@@ -175,10 +187,6 @@ namespace SnakeGameProject
                 Food.SetFoodPosition(null);
                 _snake.EatFood();
             }
-        }
-        public void CheckIfLevelCompleted(Snake snake)
-        {
-            throw new NotImplementedException();
         }
 
     }
