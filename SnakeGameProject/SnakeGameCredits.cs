@@ -9,50 +9,87 @@ using System.Text.RegularExpressions;
 
 namespace SnakeGameProject
 {
-    public class GameCreditsModel
-    {
-        public string? gameTitle { get; set; }
-        public string? gameVersion { get; set; }
-        public string? year { get; set; }
-        public Dictionary<string, string>? credits { get; set; }
-    }
 
     public static class SnakeGameCredits
     {
-        // Workaround to get the project directory. Not optimal, refactor:
-        private static string projectDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
-        private static GameCreditsModel? gameCredits;
+        private static string projectDirectory;
+        private static GameCredits? gameCredits;
 
-        private static void ExitCredits()
+        static SnakeGameCredits()
         {
-            ConsoleKeyInfo selectedKey;
-            do
+            projectDirectory = GetProjectDirectory();
+        }
+        
+        private static string GetProjectDirectory()
+        {
+            var pd = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent;
+            return pd?.FullName ?? string.Empty;
+        }
+        
+        public static void ShowCredits()
+        {
+            bool sucess = CreditsBuildier();
+            if (sucess)
             {
-                selectedKey = Console.ReadKey(true);
-            }
-            while (selectedKey.Key != ConsoleKey.Spacebar);
-
-            if (selectedKey.Key == ConsoleKey.Spacebar)
-            {
+                Type type = typeof(GameCredits);
+                PropertyInfo[] properties = type.GetProperties();
                 Console.Clear();
                 SnakeGameVisualRenders.RenderAppBanner();
+                Console.WriteLine("\n");
+
+                foreach (PropertyInfo property in properties)
+                {
+                    string name = property.Name;
+                    object? value = property.GetValue(gameCredits);
+
+                    if (value is Dictionary<string, string>)
+                    {
+                        SnakeGameVisualRenders.SetForeGroundColor(ForeGroundColors.Yellow);
+                        SnakeGameVisualRenders.CenterElement($"{name}".ToUpperInvariant());
+                        SnakeGameVisualRenders.ResetForeGroundColor();
+                        HandleCreditDictionary((Dictionary<string, string>)value);
+                        SnakeGameVisualRenders.RenderExitSpacebar();
+                    }
+                    else
+                    {
+                        string n = Regex.Replace(name, "(?<!^)([A-Z])", " $1").ToUpper();
+                        SnakeGameVisualRenders.SetForeGroundColor(ForeGroundColors.Yellow);
+                        ; SnakeGameVisualRenders.CenterElement($"{n}");
+                        SnakeGameVisualRenders.ResetForeGroundColor();
+                        SnakeGameVisualRenders.CenterElement($"{value}\n");
+                    }
+                }
             }
+            ExitCredits();
         }
-        private static void CreditsBuildier()
+        
+        private static bool CreditsBuildier()
         {
             try
             {
                 string jsonString = File.ReadAllText($"{projectDirectory}/credits.json");
-                GameCreditsModel? deserializedData = new GameCreditsModel();
-                gameCredits = JsonSerializer.Deserialize<GameCreditsModel>(jsonString);
+                GameCredits? deserializedData = JsonSerializer.Deserialize<GameCredits?>(jsonString);
+                if (deserializedData == null)
+                {
+                    Console.Clear();
+                    SnakeGameVisualRenders.RenderAppBanner();
+                    SnakeGameVisualRenders.RenderExitSpacebar();
+                    Console.WriteLine($"\n\x1b[91mError retreving procesing credits data\x1b[39m");
+                    return false;
+                }
+                gameCredits = deserializedData;
+                return true;
             }
-            catch (Exception e ){
-                Console.WriteLine($"Error retreving credits data: {e.Message}\n\n");
+            catch (Exception e)
+            {
+                Console.Clear();
+                SnakeGameVisualRenders.RenderAppBanner();
                 SnakeGameVisualRenders.RenderExitSpacebar();
-                Console.ReadLine();
+                Console.WriteLine($"\n\x1b[91mError retreving credits data: {e.Message}\x1b[39m");
+                return false;
             }
         }
-
+        
         private static void HandleCreditDictionary (Dictionary<string,string> creditDic)
         {
             int maxKeyLength = 0;
@@ -69,39 +106,21 @@ namespace SnakeGameProject
             SnakeGameVisualRenders.CenterCreditElement(creditDic, maxKeyLength, maxValueLength);
             Console.WriteLine("\n\n");
         }
-
-        public static void ShowCredits()
+        
+        private static void ExitCredits()
         {
-            CreditsBuildier();
-
-            Type type = typeof(GameCreditsModel);
-            PropertyInfo[] properties = type.GetProperties();
-
-            Console.Clear();
-
-            SnakeGameVisualRenders.RenderAppBanner();
-            Console.WriteLine("\n");
-            foreach (PropertyInfo property in properties) {
-                string name = property.Name;
-                object? value = property.GetValue(gameCredits);
-
-                if (value is Dictionary<string, string>)
-                {
-                    SnakeGameVisualRenders.SetForeGroundColor(ForeGroundColors.Yellow);
-                    SnakeGameVisualRenders.CenterElement($"{name}".ToUpperInvariant());
-                    SnakeGameVisualRenders.ResetForeGroundColor();
-                    HandleCreditDictionary((Dictionary<string, string>)value);
-                    SnakeGameVisualRenders.RenderExitSpacebar();
-                } else
-                {
-                    string n = Regex.Replace(name, "(?<!^)([A-Z])", " $1").ToUpper();
-                    SnakeGameVisualRenders.SetForeGroundColor(ForeGroundColors.Yellow);
-;                   SnakeGameVisualRenders.CenterElement($"{n}");
-                    SnakeGameVisualRenders.ResetForeGroundColor();
-                    SnakeGameVisualRenders.CenterElement($"{value}\n");
-                }
+            ConsoleKeyInfo selectedKey;
+            do
+            {
+                selectedKey = Console.ReadKey(true);
             }
-            ExitCredits();
+            while (selectedKey.Key != ConsoleKey.Spacebar);
+
+            if (selectedKey.Key == ConsoleKey.Spacebar)
+            {
+                Console.Clear();
+                SnakeGameVisualRenders.RenderAppBanner();
+            }
         }
     }
 }
