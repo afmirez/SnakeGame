@@ -1,17 +1,14 @@
-﻿using System;
+﻿using SnakeGameProject.Core;
+using SnakeGameProject.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
-using SnakeGameProject.Core;
-using SnakeGameProject.Entities;
-using SnakeGameProject.VisualRenders;
 
-namespace SnakeGameProject
+namespace SnakeGameProject.VisualRenders
 {
-
-    public static class SnakeGameVisualRenders
+    class VisualUtils
     {
         private static GameContext _gameContext;
 
@@ -35,7 +32,6 @@ namespace SnakeGameProject
             _gameContext.playerMaxScoreUpdateHandler += UpdateStatsMaxScore;
             _gameContext.levelCompleteHandler += UpdateCurrentLevel;
         }
-
         public static void UnsuscribeToEvents()
         {
             _gameContext.currentScoreChangeHandler -= UpdateStatsCurrentScore;
@@ -44,8 +40,6 @@ namespace SnakeGameProject
         }
 
         private static int scoresMaxLength = 0;
-
-
         public static void SetGameContext(GameContext gameContext)
         {
             _gameContext = gameContext;
@@ -82,7 +76,7 @@ namespace SnakeGameProject
             CenterElement(ExitSpaceBar);
             ResetForeGroundColor();
         }
-        public static void SetForeGroundColor (ForeGroundColors color)
+        public static void SetForeGroundColor(ForeGroundColors color)
         {
             switch (color)
             {
@@ -98,7 +92,7 @@ namespace SnakeGameProject
                 case ForeGroundColors.DarkCyan:
                     Console.ForegroundColor = ConsoleColor.DarkCyan;
                     break;
-            }    
+            }
         }
         public static void ResetForeGroundColor()
         {
@@ -107,20 +101,14 @@ namespace SnakeGameProject
         public static void CenterElement(string element)
         {
             int consoleWidth = Console.WindowWidth;
-            string [] lines = element.Split(new[] { "\r\n" }, StringSplitOptions.None);
+            string[] lines = element.Split(new[] { "\r\n" }, StringSplitOptions.None);
             foreach (var line in lines)
             {
                 int padding = (consoleWidth - line.Length) / 2;
                 Console.WriteLine(new string(' ', padding) + line);
             }
         }
-
-
-        
-        // Center Element Two is the same as CenterElement, but it defines de mapPadding.
-        // Merge this two functions
-        // Let's clean the logic related to the mapvariable. 
-        public static void CenterElementTwo (string element)
+        public static void CenterMap(string element)
         {
             int padding = 0;
             int consoleWidth = Console.WindowWidth;
@@ -180,15 +168,14 @@ namespace SnakeGameProject
 
                 mapString = mapString + "\r\n";
             }
-            CenterElementTwo(mapString);
+            CenterMap(mapString);
             ShowStats();
         }
-
         public static void UpdateSnake(Snake snake)
         {
             // The use of mapPadding is necessary to adjust the snake position to the centered map
             // Logic is 0 based, so we need to add the padding to the x position
-            // Just for render purposes. Logic is still 0 based
+            // This is just for visual render purposes. Logic is still 0 based
 
             int topSpaceMenu = GetMainBannerHeight();
             (int x, int y) oldTail = snake.GetSnakeBody().Last();
@@ -205,8 +192,6 @@ namespace SnakeGameProject
             Console.SetCursorPosition(oldTail.y + mapPadding, oldTail.x + topSpaceMenu);
             Console.Write(" ");
         }
-
-
         public static void UpdateFood((int x, int y)? foodsPosition)
         {
             int topSpaceMenu = GetMainBannerHeight();
@@ -220,7 +205,6 @@ namespace SnakeGameProject
                 Console.Write("@");
             }
         }
-
         public static void RemoveFood((int x, int y)? lastFoodPosition)
         {
             int topSpaceMenu = GetMainBannerHeight();
@@ -233,7 +217,6 @@ namespace SnakeGameProject
                 Console.Write(" ");
             }
         }
-
         public static void ShowStats()
         {
 
@@ -266,14 +249,10 @@ namespace SnakeGameProject
             {
                 int currentKeyLength = maxKeyLength - kvp.Key.Length;
                 string line = $"\x1b[96m{kvp.Key}\x1b[39m" + new string(' ', currentKeyLength) + " : " + kvp.Value;
-
-                //= SnakeGameVisualRenders.WriteLine(line);
-                //CenterElement(line);
                 Console.WriteLine(new string(' ', mapPadding) + line);
-                //Console.WriteLine(line);
+
             }
         }
-
         public static void UpdateCurrentLevel()
         {
             int top = GetMainBannerHeight() + GetMapHeight();
@@ -282,7 +261,6 @@ namespace SnakeGameProject
             Console.SetCursorPosition(left, top);
             Console.Write(new string(' ', stringLength));
             Console.SetCursorPosition(left, top);
-            // Evaluar esto: 
             Console.Write(_gameContext.currentLevelName);
         }
         public static void UpdateStatsCurrentScore()
@@ -297,7 +275,6 @@ namespace SnakeGameProject
 
         public static void UpdateStatsMaxScore()
         {
-            // LA LOGICA DEL CAMBIO DEBE SER UPDATED PORQUE ACA QUEREMOS BORRRAR TODA LA LINEA, NO SOLO UNA PARTTE
             int top = GetMainBannerHeight() + GetMapHeight() + 2;
             int left = scoresMaxLength + mapPadding;
             Console.SetCursorPosition(left, top);
@@ -305,7 +282,5 @@ namespace SnakeGameProject
             Console.SetCursorPosition(left, top);
             Console.Write(_gameContext.maxScore);
         }
-
-
     }
 }

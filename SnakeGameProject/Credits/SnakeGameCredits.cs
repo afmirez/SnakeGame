@@ -1,13 +1,8 @@
-﻿using System;
-using System.IO;
-using System.Text.Json;
-using System.Collections.Generic;
+﻿using System.Text.Json;
 using System.Reflection;
-using System.Text;
-using System.Security.Authentication;
 using System.Text.RegularExpressions;
 
-namespace SnakeGameProject
+namespace SnakeGameProject.Credits
 {
 
     public static class SnakeGameCredits
@@ -19,13 +14,13 @@ namespace SnakeGameProject
         {
             projectDirectory = GetProjectDirectory();
         }
-        
+
         private static string GetProjectDirectory()
         {
             var pd = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent;
             return pd?.FullName ?? string.Empty;
         }
-        
+
         public static void ShowCredits()
         {
             bool sucess = CreditsBuildier();
@@ -62,12 +57,12 @@ namespace SnakeGameProject
             }
             ExitCredits();
         }
-        
+
         private static bool CreditsBuildier()
         {
             try
             {
-                string jsonString = File.ReadAllText($"{projectDirectory}/credits.json");
+                string jsonString = File.ReadAllText($"{projectDirectory}/Credits/credits.json");
                 GameCredits? deserializedData = JsonSerializer.Deserialize<GameCredits?>(jsonString);
                 if (deserializedData == null)
                 {
@@ -89,8 +84,8 @@ namespace SnakeGameProject
                 return false;
             }
         }
-        
-        private static void HandleCreditDictionary (Dictionary<string,string> creditDic)
+
+        private static void HandleCreditDictionary(Dictionary<string, string> creditDic)
         {
             int maxKeyLength = 0;
             int maxValueLength = 0;
@@ -106,7 +101,7 @@ namespace SnakeGameProject
             SnakeGameVisualRenders.CenterCreditElement(creditDic, maxKeyLength, maxValueLength);
             Console.WriteLine("\n\n");
         }
-        
+
         private static void ExitCredits()
         {
             ConsoleKeyInfo selectedKey;

@@ -1,4 +1,4 @@
-﻿using SnakeGameProject;
+﻿using SnakeGameProject.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;

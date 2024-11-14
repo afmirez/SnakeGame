@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SnakeGameProject
+namespace SnakeGameProject.Entities
 {
     public class Map
     {
-        private int _width { get;}
+        private int _width { get; }
         private int _height { get; }
         private int[,] _map { get; }
 

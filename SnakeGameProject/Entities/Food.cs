@@ -1,4 +1,4 @@
-﻿namespace SnakeGameProject
+﻿namespace SnakeGameProject.Entities
 {
     static public class Food
     {

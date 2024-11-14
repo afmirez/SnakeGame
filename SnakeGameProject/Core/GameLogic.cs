@@ -6,33 +6,29 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Xml.Linq;
+using SnakeGameProject.Entities;
+using SnakeGameProject.VisualRenders;
 
 
-namespace SnakeGameProject
+namespace SnakeGameProject.Core
 {
     public class GameLogic
     {
-
-        // 10.25.24
-        private int _snakeSpeed;
-        private int _foodSpawnRate;
-        private int _foodRemoveRate;
-
-
-        // 1. Implementar change level para cambiar valor de propiedades
-        private Snake _snake;
-        private Map _map;
         private Action SnakeMovementHandler;
         private System.Timers.Timer? generateFoodTimer;
         private System.Timers.Timer? removeFoodTimer;
-        private bool isSnakeMoving { get; set; }
 
+        private int _snakeSpeed;
+        private int _foodSpawnRate;
+        private int _foodRemoveRate;
+        private Snake _snake;
+        private Map _map;
         private bool isGameRunning;
-        public GameLogic(Map map, Snake snake) {
-            //isGameRunning = true;
+        private bool isSnakeMoving { get; set; }
+        public GameLogic(Map map, Snake snake)
+        {
             _map = map;
             _snake = snake;
-            //SetTimers();
             SnakeMovementHandler += OnSnakeMoving;
         }
 
@@ -43,14 +39,15 @@ namespace SnakeGameProject
             _foodRemoveRate = foodRemoveRate;
         }
 
-        public void InitGame() {
+        public void InitGame()
+        {
             isGameRunning = true;
             SetTimers();
         }
 
-      
-        public void OnSnakeMoving ()
-       {
+
+        public void OnSnakeMoving()
+        {
             if (isGameRunning)
             {
                 IsThereCollision();
@@ -59,11 +56,11 @@ namespace SnakeGameProject
                 {
                     SnakeGameVisualRenders.UpdateSnake(_snake);
                 }
-        
+
             }
         }
 
-        public void GameOver()
+        public void StopGame()
         {
             isGameRunning = false;
             generateFoodTimer?.Stop();
@@ -93,7 +90,7 @@ namespace SnakeGameProject
             removeFoodTimer.AutoReset = true;
             removeFoodTimer.Enabled = true;
         }
-        private void OnGenerateFoodTimer(Object source, ElapsedEventArgs e)
+        private void OnGenerateFoodTimer(object source, ElapsedEventArgs e)
         {
             int mapHeight = _map.GetHeight();
             int mapWidth = _map.GetWidth();
@@ -101,25 +98,25 @@ namespace SnakeGameProject
             Food.SetFoodPosition(foodPosition);
             SnakeGameVisualRenders.UpdateFood(foodPosition);
         }
-        private void OnRemoveFoodTimer(Object source, ElapsedEventArgs e)
+        private void OnRemoveFoodTimer(object source, ElapsedEventArgs e)
         {
             (int x, int y)? lastFoodPosition = Food.GetFoodPosition();
             SnakeGameVisualRenders.RemoveFood(lastFoodPosition);
             Food.SetFoodPosition(null);
         }
 
-        public void MoveSnake( SnakeMovement lastMovement)
+        public void MoveSnake(SnakeMovement lastMovement)
         {
-            
+
             SnakeGameVisualRenders.RenderMap(_map, _snake);
-            
+
             isSnakeMoving = true;
             ConsoleKeyInfo key;
             SnakeMovement currentMovement = lastMovement;
 
             while (isGameRunning)
             {
-                // Defines how fast the snake moves. This should be sent from the level.
+                // Defines how fast the snake moves. This is defined by the CURRENT level. 
                 Thread.Sleep(_snakeSpeed);
 
                 if (_snake.isAlive)
@@ -162,7 +159,7 @@ namespace SnakeGameProject
             (int x, int y) snakeHead = _snake.GetSnakeHead();
             List<(int, int)> snakeBody = _snake.GetSnakeBody();
 
-            // Wall collision. 1 should be WALL
+            // Wall collision.
             if (arrayMap[snakeHead.x, snakeHead.y] == 1)
             {
                 _snake.Die();

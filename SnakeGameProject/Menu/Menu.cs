@@ -8,10 +8,6 @@ using System.Threading.Tasks;
 
 namespace SnakeGameProject
 {
-    public enum BackgroundColor {
-        Black,
-        White
-    }
     public class Menu
     {
         private string[] _options;
@@ -29,32 +25,32 @@ namespace SnakeGameProject
         public void ShowMenu()
         {
             Console.CursorVisible = false;
-            RenderMenu();
+            RenderOptions();
             while (true)
             {
-                RenderMenu();
-                SelectOption();
+                RenderOptions();
+                HandleOptionSelection();
             }
         }
-        private void RenderMenu()
+        private void RenderOptions()
         {
             for (int i = 0; i < _options.Length; i++) {
                 string currentOption = _options[i];
                 if (i == selectedIndex)
                 {
-                    HighlightOption(true, currentOption);
+                    SetOptionHighlight(true, currentOption);
                 } else
                 {
-                    HighlightOption(false, currentOption);
+                    SetOptionHighlight(false, currentOption);
                 }
             }
         }
         private void UpdateOption(int index, bool isSelected)
         {
             Console.SetCursorPosition(0, index);
-            HighlightOption(isSelected, _options[index]);
+            SetOptionHighlight(isSelected, _options[index]);
         }
-        private void HighlightOption(bool isOptionSelected, string option)
+        private void SetOptionHighlight(bool isOptionSelected, string option)
         {
             int optionIndex = Array.IndexOf(_options, option);
 
@@ -66,16 +62,16 @@ namespace SnakeGameProject
 
             if (isOptionSelected)
             {
-                ResetColor(BackgroundColor.White);
+                SetOptionColoBackground(ForeGroundColors.White);
             }
             else
             {
-                ResetColor(BackgroundColor.Black);
+                SetOptionColoBackground(ForeGroundColors.Black);
             }
 
             Console.WriteLine(prefix + option);
         }
-        private void SelectOption()
+        private void HandleOptionSelection()
         {
             ConsoleKeyInfo selectedKey;
             do
@@ -98,21 +94,21 @@ namespace SnakeGameProject
             }
             else if (selectedKey.Key == ConsoleKey.Enter)
             {
-                ResetColor(BackgroundColor.Black);
+                SetOptionColoBackground(ForeGroundColors.Black);
                 _strategy.ExecuteOptions(selectedIndex + 1);
                 return;
             }
             UpdateOption(previousIndex, false);
             UpdateOption(selectedIndex, true);
         }
-        private void ResetColor(BackgroundColor color)
+        private void SetOptionColoBackground(ForeGroundColors color)
         {
-            if (color == BackgroundColor.Black)
+            if (color == ForeGroundColors.Black)
             {
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.BackgroundColor = ConsoleColor.Black;
             }
-            else if (color == BackgroundColor.White)
+            else if (color == ForeGroundColors.White)
             {
                 Console.ForegroundColor = ConsoleColor.Black;
                 Console.BackgroundColor = ConsoleColor.White;

@@ -1,20 +1,20 @@
 ﻿using System.Security.Cryptography.X509Certificates;
 
-namespace SnakeGameProject
+namespace SnakeGameProject.VisualRenders
 {
     public class Snake
     {
         private List<(int x, int y)> _snakeBody = new List<(int x, int y)>();
-        private Action MoveUp;
-        private Action MoveDown;
-        private Action MoveLeft;
-        private Action MoveRight;
 
-        public event Action SnakeDieHandler;
-        public event Action SnakeEatHandler;
+        private Action MoveUp = delegate { };
+        private Action MoveDown = delegate { };
+        private Action MoveLeft = delegate { };
+        private Action MoveRight = delegate { };
+
+        public event Action SnakeDieHandler = delegate { };
+        public event Action SnakeEatHandler = delegate { };
 
         public bool isAlive { get; private set; }
-
         private int initXPosition;
         private int initHeadPosition;
 
@@ -26,14 +26,16 @@ namespace SnakeGameProject
             InitSnake(xPosition, head);
             InitMoveActions();
         }
-        private void InitSnake(int x, int y) {
-            for (int i = 1; i <= 7; i++) {
+        private void InitSnake(int x, int y)
+        {
+            for (int i = 1; i <= 7; i++)
+            {
                 _snakeBody.Add((x, y - i));
             }
         }
         private void InitMoveActions()
         {
-            MoveUp = () => MoveSnake((-1,0));
+            MoveUp = () => MoveSnake((-1, 0));
             MoveDown = () => MoveSnake((1, 0));
             MoveLeft = () => MoveSnake((0, -1));
             MoveRight = () => MoveSnake((0, 1));
@@ -42,7 +44,6 @@ namespace SnakeGameProject
         {
             return _snakeBody;
         }
-
         public (int x, int y) GetSnakeHead()
         {
             return _snakeBody[0];
@@ -78,16 +79,15 @@ namespace SnakeGameProject
         public void EatFood()
         {
             (int x, int y) tail = _snakeBody.Last();
-            (int x , int y ) newElement = (tail.x, tail.y - 1);
+            (int x, int y) newElement = (tail.x, tail.y - 1);
             _snakeBody.Add(newElement);
-            SnakeEatHandler?.Invoke(); 
+            SnakeEatHandler?.Invoke();
         }
-        public void Die ()
+        public void Die()
         {
             isAlive = false;
-            SnakeDieHandler?.Invoke();  
+            SnakeDieHandler?.Invoke();
         }
-
         public void RegenerateSnake()
         {
             _snakeBody.Clear();

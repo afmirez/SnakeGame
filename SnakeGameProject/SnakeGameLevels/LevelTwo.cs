@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SnakeGameProject.Core;
 
 namespace SnakeGameProject
 {
@@ -14,7 +15,7 @@ namespace SnakeGameProject
         int snakeSpeed = 30;
         int foodSpawnRate = 8000;
         int foodRemoveRate = 4000;
-        int maxLevelScore = 100;
+        int maxLevelScore = 10000;
 
         public string Name => levelGameName;
 
@@ -39,8 +40,8 @@ namespace SnakeGameProject
         {
             if (_game.currentScore >= maxLevelScore)
             {
-                Console.WriteLine("Holaa");
-                //_game.SetLevel(new LevelTwo(_game, _gameLogic));
+                // Not implemented...
+                // _game.SetNewLevel(new LevelThree(_game, _gameLogic));
             }
 
         }

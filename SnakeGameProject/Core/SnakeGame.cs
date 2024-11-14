@@ -5,31 +5,40 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SnakeGameProject
+namespace SnakeGameProject.Core
 {
-    internal class SnakeGame
+    public class SnakeGame
     {
-
-        public SnakeGame() { }
         public void StartGame()
         {
-            Player player = CreatePlayer();
-            
+            Player? player = CreatePlayer();
             if (player == null)
             {
                 Console.Clear();
                 SnakeGameVisualRenders.RenderAppBanner();
                 return;
             }
-
-            GameContext game = new GameContext(player);
-            SnakeGameVisualRenders.SetGameContext(game);
+            GameContext gameContext = new GameContext(player);
+            SnakeGameVisualRenders.SetGameContext(gameContext);
             SnakeGameVisualRenders.SuscribeToEvents();
-
-            // Esta logica va a cambiar para que el inicio se de en base al nivel.
-            // Lo unico que obtenemos afuera es el player, lo cual lo veo bien.
-            game.initLevel();
-
+            gameContext.InitLevel();
+        }
+        private Player? CreatePlayer()
+        {
+            Console.Clear();
+            SnakeGameVisualRenders.RenderAppBanner();
+            StringBuilder input = new StringBuilder();
+            SnakeGameVisualRenders.RenderExitSpacebar();
+            Console.Write("\n\n Who will control the snake? Enter your name (min. 3 characters): ");
+            Player? player;
+            string? userName = GetUserName();
+            if (userName == null)
+            {
+                player = null;
+                return player;
+            }
+            player = new Player(userName);
+            return player;
         }
         private string? GetUserName()
         {
@@ -62,7 +71,8 @@ namespace SnakeGameProject
                     }
                     else
                     {
-                        if (userInput.Length < 12) {
+                        if (userInput.Length < 12)
+                        {
                             Console.Write(key.KeyChar);
                             userInput.Append(key.KeyChar);
                         }
@@ -70,24 +80,5 @@ namespace SnakeGameProject
                 }
             }
         }
-        public Player? CreatePlayer()
-        {
-            Console.Clear();
-            SnakeGameVisualRenders.RenderAppBanner();
-            StringBuilder input = new StringBuilder();
-            SnakeGameVisualRenders.RenderExitSpacebar();
-            Console.Write("\n\n Who will control the snake? Enter your name (min. 3 characters): ");
-            Player? player;
-            string? userName = GetUserName();
-            if (userName == null)
-            {
-                player = null;
-                return player;
-            }
-            player = new Player(userName);
-            return player;
-        }
-
-
     }
 }
