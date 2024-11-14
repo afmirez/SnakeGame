@@ -11,7 +11,9 @@ class Program
     {
         string[] mainMenuOptions = { "Start Game", "Credits", "Exit" };
         IMenuStrategy menuStrategy = new IMainMenuStrategy();
-        Menu menu = new Menu(mainMenuOptions, menuStrategy);
+        int topSpaceMenu = SnakeGameVisualRenders.GetMainBannerHeight();
+        Menu menu = new Menu(mainMenuOptions, menuStrategy, topSpaceMenu);
+        SnakeGameVisualRenders.RenderAppBanner();
         menu.ShowMenu();
     }
 }

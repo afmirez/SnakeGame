@@ -1,30 +1,29 @@
-﻿using SnakeGameProject.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SnakeGameProject.Core;
 
 namespace SnakeGameProject
 {
-    public class LevelOne : ILevel
+    public class LevelTwo : ILevel
     {
-
         GameContext _game;
         GameLogic _gameLogic;
-        string levelGameName = "[LEVEL ONE -- GENESIS CRAWL]";
-        int snakeSpeed = 50;
+        string levelGameName = "[LEVEL TWO -- VELOCITY RUSH]";
+        int snakeSpeed = 30;
         int foodSpawnRate = 8000;
         int foodRemoveRate = 4000;
-        int maxLevelScore = 3;
+        int maxLevelScore = 10000;
 
         public string Name => levelGameName;
 
-        public LevelOne(GameContext game, GameLogic gameLogic)
+        public LevelTwo(GameContext game, GameLogic gameLogic)
         {
             _game = game;
             _gameLogic = gameLogic;
-           
+            game.currentScoreChangeHandler += EndLevel;
         }
 
         public void StartLevel()
@@ -41,7 +40,8 @@ namespace SnakeGameProject
         {
             if (_game.currentScore >= maxLevelScore)
             {
-                _game.SetNewLevel(new LevelTwo(_game, _gameLogic));
+                // Not implemented...
+                // _game.SetNewLevel(new LevelThree(_game, _gameLogic));
             }
 
         }
@@ -49,7 +49,6 @@ namespace SnakeGameProject
         public void FinishLevel()
         {
             _game.currentScoreChangeHandler -= EndLevel;
-
         }
     }
 }

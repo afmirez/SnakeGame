@@ -3,5 +3,7 @@
     Green,
     Magenta,
     Yellow,
-    DarkCyan
+    DarkCyan,
+    White,
+    Black
 }
